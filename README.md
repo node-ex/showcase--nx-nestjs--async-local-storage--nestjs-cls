@@ -1,4 +1,10 @@
-# template--nx-nestjs--basic
+# showcase--nx-nestjs--async-local-storage--nestjs-cls
+
+## Showcase
+
+1. Run `pnpm install`
+2. Run the app using `pnpm exec nx run app-nest-1:serve`
+3. Enable "REST Client" extension in VSCode and run the requests in `./api/requests.http` file
 
 ## Local development
 
