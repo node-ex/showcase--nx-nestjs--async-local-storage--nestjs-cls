@@ -7,8 +7,8 @@ import { ClsModule, ClsService } from 'nestjs-cls';
 import { RequestIpInterceptor } from './request-ip.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import type { Request } from 'express';
-import { IMyClsServiceStore } from './my-cls-service-store.interface';
 import { ScheduleModule } from '@nestjs/schedule';
+import { CustomClsServiceProvider } from './custom-cls-service.provider';
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { ScheduleModule } from '@nestjs/schedule';
           return requestIdHeader || uuid();
         },
         setup(cls) {
-          const clsService = cls as ClsService<IMyClsServiceStore>;
+          const clsService = cls as CustomClsServiceProvider;
           clsService.set('mode', 'http');
         },
       },
@@ -41,11 +41,15 @@ import { ScheduleModule } from '@nestjs/schedule';
   ],
   controllers: [AppController],
   providers: [
-    AppService,
+    {
+      provide: CustomClsServiceProvider,
+      useExisting: ClsService,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: RequestIpInterceptor,
     },
+    AppService,
   ],
 })
 export class AppModule {}

@@ -4,14 +4,13 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { ClsService } from 'nestjs-cls';
 import { Observable } from 'rxjs';
 import type { Request } from 'express';
-import { IMyClsServiceStore } from './my-cls-service-store.interface';
+import { CustomClsServiceProvider } from './custom-cls-service.provider';
 
 @Injectable()
 export class RequestIpInterceptor implements NestInterceptor {
-  constructor(private readonly clsService: ClsService<IMyClsServiceStore>) {}
+  constructor(private readonly clsService: CustomClsServiceProvider) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request = context.switchToHttp().getRequest<Request>();

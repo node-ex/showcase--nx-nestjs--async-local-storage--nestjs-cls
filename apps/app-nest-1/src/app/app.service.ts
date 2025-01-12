@@ -1,21 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CLS_ID, ClsService, UseCls } from 'nestjs-cls';
-import { IMyClsServiceStore } from './my-cls-service-store.interface';
+import { CLS_ID, UseCls } from 'nestjs-cls';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { v4 as uuid } from 'uuid';
+import { CustomClsServiceProvider } from './custom-cls-service.provider';
 
 @Injectable()
 export class AppService {
   private readonly logger = new Logger(AppService.name);
 
-  constructor(private readonly clsService: ClsService<IMyClsServiceStore>) {}
+  constructor(private readonly clsService: CustomClsServiceProvider) {}
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   @UseCls({
     generateId: true,
     idGenerator: () => uuid(),
     setup(cls) {
-      const clsService = cls as ClsService<IMyClsServiceStore>;
+      const clsService = cls as CustomClsServiceProvider;
       clsService.set('mode', 'cron');
     },
   })
