@@ -3,10 +3,12 @@ import { v4 as uuid } from 'uuid';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { ClsModule } from 'nestjs-cls';
+import { ClsModule, ClsService } from 'nestjs-cls';
 import { RequestIpInterceptor } from './request-ip.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import type { Request } from 'express';
+import { IMyClsServiceStore } from './my-cls-service-store.interface';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -29,8 +31,13 @@ import type { Request } from 'express';
           // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           return requestIdHeader || uuid();
         },
+        setup(cls) {
+          const clsService = cls as ClsService<IMyClsServiceStore>;
+          clsService.set('mode', 'http');
+        },
       },
     }),
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [
